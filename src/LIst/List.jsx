@@ -1,15 +1,45 @@
 import React from "react";
+import { useState, createContext, useContext } from "react";
+import Footer from "../Footer/Footer";
+import SearchInterface from "../SearchInterface/SearchInterface";
+import { SearchQueryContext } from "../SearchInterface/SearchInterface";
+
+export const QuantityContext = createContext();
 
 function List() {
 
-  function handleChoose() {
-    return (
-      <></>
-    )
+  const filteredItems = useContext(SearchQueryContext)
+  
+  {/* Логика после нажатия кнопки "Выбрать" */}
+  const [selectedItems, setSelectedItems] = useState({})
+
+  function handleChoose(item) {
+    
+      setSelectedItems((prev) => ({
+        ...prev,
+        [item]: true
+      }))
+  }
+  {/* Логика после нажатия кнопки "Выбрать" */}
+
+
+  {/* Увеличение кол-ва товара */}
+  const [quantity, setQuantity] = useState(0)
+
+  function increaseAmount() {
+    setQuantity(prevQuantity => prevQuantity + 1)
   }
 
+  function decreaseAmount() {
+    setQuantity(prevQuantity => prevQuantity - 1)
+  }
+  {/* Увеличение кол-ва товара */}
+
+
   return (
+
     <>
+    
       <div className="px-4 py-3 my-4">
         <label className="flex flex-col min-w-40 h-12 w-full">
           <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
@@ -30,8 +60,12 @@ function List() {
           </div>
         </label>
       </div>
-      
-      <div className="pb-3">
+
+      {filteredItems.length > 0 ? <SearchInterface/> : (
+        
+        <>
+        <QuantityContext.Provider value={quantity}>
+        <div className="pb-3">
         <div className="flex border-b border-[#e6e0db] px-4 gap-8">
           <a className="flex flex-col items-center justify-center border-b-[3px] border-b-[#181411] text-[#181411] pb-[13px] pt-4" href="#">
             <p className="text-[#181411] text-sm font-bold leading-normal tracking-[0.015em]">Популярное</p>
@@ -48,13 +82,27 @@ function List() {
           <div className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl bg-[url('https://cdn.usegalileo.ai/sdxl10/99bc0a3e-adb9-448f-b422-e447f7a72854.png')]"></div>
           <div className="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
             <div>
-              <p className="text-[#181411] text-base font-medium leading-normal">Цезарь</p>
+              <p className="text-[#181411] text-base font-medium leading-normal">Салат "Цезарь"</p>
               <p className="text-[#897361] text-sm font-normal leading-normal">320 руб</p>
             </div>
+
+            {selectedItems["Салат Цезарь"] ? (
+
+              <div className="flex gap-6">
+                <button className="cursor-pointer px-4 py-2 bg-gray-200 rounded-xl" onClick={(() => increaseAmount())}>+</button>
+                <p className="py-1.25 font-semibold">{quantity}</p>
+                <button className="cursor-pointer px-4 py-2 bg-gray-200 rounded-xl" onClick={(() => decreaseAmount())}>-</button>
+              </div>
+
+            ) : (
+
             <button className=
-            "flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#f4f2f0] text-[#181411] text-sm font-bold leading-normal tracking-[0.015em]" onClick={handleChoose}>
-             <span className="truncate">Выбрать</span>
+            "flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#f4f2f0] text-[#181411] text-sm font-bold leading-normal tracking-[0.015em]" onClick={() => { handleChoose("Салат Цезарь"); increaseAmount()}}>
+             <span className="truncate cursor-pointer">Выбрать</span>
             </button>
+            )}
+
+
           </div>
         </div>
 
@@ -64,7 +112,7 @@ function List() {
            <div className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl bg-[url('https://cdn.usegalileo.ai/sdxl10/ad17b129-0ea1-4b24-ae21-e9a990fc94ea.png')]"></div>
            <div className="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
               <div>
-                <p className="text-[#181411] text-base font-medium leading-normal">Авокадо</p>
+                <p className="text-[#181411] text-base font-medium leading-normal">Салат "Авокадо"</p>
                 <p className="text-[#897361] text-sm font-normal leading-normal">250 р.</p>
               </div>
               <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#f4f2f0] text-[#181411] text-sm font-bold leading-normal tracking-[0.015em]">
@@ -103,11 +151,14 @@ function List() {
           </div>
       </div>
       
+      <Footer />
+      </QuantityContext.Provider>
       
   
- 
-    </>
+    </>)}
+      
+  </>
   );
 }
 
-export default List;
+export default List

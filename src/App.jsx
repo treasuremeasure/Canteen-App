@@ -10,7 +10,6 @@ function App() {
     <div>
       <Header/>
       <List/>
-      <Footer/>
     </div>
    
   )
