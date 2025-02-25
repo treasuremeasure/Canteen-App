@@ -1,6 +1,6 @@
 import Header from "./Header/Header.jsx"
 import List from "./LIst/List.jsx"
-import Footer from "./Footer/Footer.jsx"
+import SearchInterface from "./SearchInterface/SearchInterface.jsx"
 
 
 
@@ -8,7 +8,6 @@ function App() {
 
   return (
     <div>
-      <Header/>
       <List/>
     </div>
    
