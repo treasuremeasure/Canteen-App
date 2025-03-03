@@ -1,8 +1,5 @@
-import Header from "./Header/Header.jsx"
-import List from "./LIst/List.jsx"
-import SearchInterface from "./SearchInterface/SearchInterface.jsx"
-
-
+import List from "./LIst/List"
+import Footer from "./Footer/Footer"
 
 function App() {
 
