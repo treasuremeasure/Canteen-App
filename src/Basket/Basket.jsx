@@ -2,21 +2,19 @@ import { useContext, useState } from "react"
 import List, { SelectedItemsContext } from "../LIst/List"
 import Footer from "../Footer/Footer"
 
-export default function Basket({onReturn}) {
-
-    const selectedItems = useContext(SelectedItemsContext)
+export default function Basket({onReturnFromBasket}) {
 
     return (
         <>
             <div
                 className="relative flex flex-col min-h-screen bg-white justify-between group/design-root overflow-x-hidden"
-                style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}
+               
             >
                 <div>
                     {/* Верхняя панель */}
                     <div className="flex items-center bg-white p-4 pb-2 justify-between">
                         {/* Левая иконка стрелки */}
-                        <button onClick={onReturn} className="text-[#1C160C] flex w-12 shrink-0 items-center">
+                        <button onClick={onReturnFromBasket} className="text-[#1C160C] flex w-12 shrink-0 items-center">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="24px"
@@ -31,7 +29,7 @@ export default function Basket({onReturn}) {
               
                                 {/* Заголовок */}
                                 <h2 className="text-[#1C160C] text-lg font-bold leading-tight tracking-[-0.015em] flex-1">
-                                    Выбранные товары
+                                    Выбранные блюда
                                 </h2>
 
                                 {/* Правая иконка корзины */}

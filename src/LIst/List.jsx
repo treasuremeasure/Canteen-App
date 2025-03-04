@@ -21,12 +21,14 @@ export default function List() {
   const [selectedItems, setSelectedItems] = useState({});
   
   // Функция для выбора товара
-  function handleChoose(item) {
+  function handleChoose(item, price, quantity) {
     setSelectedItems(prev => ({
       ...prev,
-      [item]: true,
+      [item]: [price, quantity],
     }));
   }
+
+  console.log(selectedItems)
 
   // Увеличение кол-ва товара
   const [quantity, setQuantity] = useState(0);
@@ -57,9 +59,9 @@ export default function List() {
     <> 
       {/*Логика отображения интерфейса Корзины*/}
        {showBasket ? (
-      <SelectedItemsContext.Provider value={selectedItems}>
-        <Basket onReturn={handleHideBasket}/>
-      </SelectedItemsContext.Provider>
+  
+        <Basket onReturnFromBasket={handleHideBasket}/>
+    
     ) : (
         <>
         {/*Логика отображения интерфейса поиска*/}
@@ -140,6 +142,7 @@ export default function List() {
                           320 руб
                         </p>
                       </div>
+
                       {/* Логика выбора и изменения количества товара */}
                       {selectedItems["Салат Цезарь"] ? (
                         <div className="flex gap-6">
@@ -164,8 +167,8 @@ export default function List() {
                                      rounded-xl h-10 px-4 bg-[#f4f2f0] text-[#181411] 
                                      text-sm font-bold leading-normal tracking-[0.015em]"
                           onClick={() => {
-                            handleChoose("Салат Цезарь");
-                            increaseAmount();
+                            increaseAmount()
+                            handleChoose("Салат Цезарь", 320, quantity + 1);
                           }}
                         >
                           <span className="truncate cursor-pointer">Выбрать</span>
