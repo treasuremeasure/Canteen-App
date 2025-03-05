@@ -168,7 +168,7 @@ export default function List() {
                                      text-sm font-bold leading-normal tracking-[0.015em]"
                           onClick={() => {
                             increaseAmount()
-                            handleChoose("Салат Цезарь", 320, quantity + 1);
+                            handleChoose("Салат Цезарь", 320, quantity);
                           }}
                         >
                           <span className="truncate cursor-pointer">Выбрать</span>
