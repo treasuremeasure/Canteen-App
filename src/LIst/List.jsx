@@ -44,13 +44,14 @@ export default function List() {
   }
 
 
-  // Логика отображения интерфейса "Корзина" после нажатия кнопки "Корзина" (тут передаем функцию как колбек в другой компонент)
+  // Логика отображения интерфейса "Корзина" после нажатия кнопки "Корзина" (тут передаем функцию как колбек в Footer.jsx)
   const [showBasket, setShowBasket] = useState(false);
 
   function handleShowBasket() {
     setShowBasket(true)
   }
 
+  // Логика закрытия интерфейса "Корзина" после нажатия кнопки "Назад" (тут передаем функцию как колбек в Basket.jsx)
   function handleHideBasket() {
     setShowBasket(false)
   }
