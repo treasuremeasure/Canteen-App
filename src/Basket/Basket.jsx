@@ -4,6 +4,20 @@ import Footer from "../Footer/Footer"
 
 export default function Basket({onReturnFromBasket}) {
 
+    const basket = useContext(SelectedItemsContext)
+
+    console.log(basket)
+
+    const firstKey = Object.keys(basket)[0]; // Получаем первый ключ
+    const firstUrl = firstKey ? basket[firstKey].url : null; // Извлекаем значение url
+    const firstPrice = firstKey ? basket[firstKey].price : null; // Извлекаем значение url
+
+
+    const secondKey = Object.keys(basket)[0]; // Получаем первый ключ
+    const secondUrl = firstKey ? basket[secondUrl].url : null; // Извлекаем значение url
+    const secondprice = firstKey ? basket[secondprice].price : null; // Извлекаем 
+
+
     return (
         <>
             <div
@@ -60,16 +74,15 @@ export default function Basket({onReturnFromBasket}) {
                             <div
                                 className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg w-14 h-14"
                                 style={{
-                                    backgroundImage:
-                                        'url("https://cdn.usegalileo.ai/sdxl10/a68ff3c9-28ef-4b09-a652-6306ac1b5521.png")',
+                                    backgroundImage: firstUrl ? `url(${firstUrl})` : '',
                                 }}
                             ></div>
                             <div className="flex flex-col justify-center">
                                 <p className="text-[#1C160C] text-base font-medium leading-normal">
-                                    Цезарь
+                                    {firstKey}
                                 </p>
                                 <p className="text-[#A18249] text-sm font-normal leading-normal">
-                                    169 руб
+                                    {firstPrice} р.
                                 </p>
                             </div>
                         </div>
@@ -98,10 +111,11 @@ export default function Basket({onReturnFromBasket}) {
                             <div
                                 className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg w-14 h-14"
                                 style={{
-                                    backgroundImage:
-                                        'url("https://cdn.usegalileo.ai/sdxl10/03d23864-c7c6-4440-b104-ea37d68a7914.png")',
+                                    backgroundImage: secondUrl ? `url(${secondUrl})` : '',,
                                 }}
-                            ></div>
+                            >
+                                
+                            </div>
                             <div className="flex flex-col justify-center">
                                 <p className="text-[#1C160C] text-base font-medium leading-normal">
                                     Салат авокадо
