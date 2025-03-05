@@ -4,6 +4,7 @@ import Header from "../Header/Header";
 import Basket from "../Basket/Basket";
 import Footer from "../Footer/Footer";
 
+export const QuantityContext = createContext();
 export const SelectedItemsContext = createContext();
 
 export default function List() {
@@ -19,8 +20,8 @@ export default function List() {
 
   
   
-  
-  
+
+
   // Логика после нажатия кнопки "Выбрать"
   const [selectedItems, setSelectedItems] = useState({});
   
@@ -46,8 +47,10 @@ export default function List() {
   )
 }
 
+console.log(selectedItems)
+
   function handleIncreaseAmount(itemName) {
-    selectedItems((prev) => {
+    setSelectedItems((prev) => {
       const item = prev[itemName];
       if (!item) return prev;
       return {
@@ -58,7 +61,7 @@ export default function List() {
   }
 
   function handleDecreaseAmount(itemName) {
-    selectedItems((prev) => {
+    setSelectedItems((prev) => {
       const item = prev[itemName];
       if (!item) return prev;
       if (item.quantity <= 1) {
@@ -104,7 +107,7 @@ export default function List() {
           {showSearch ? (
             <SearchInterface />
           ) : (
-            <QuantityContext.Provider value={quantity}>
+            <QuantityContext.Provider value={selectedItems.quantity}>
               <Header/>
               <div className="px-4 py-3 my-4">
                 <label className="flex flex-col min-w-40 h-12 w-full">
@@ -184,14 +187,14 @@ export default function List() {
                         <div className="flex gap-6">
                           <button
                             className="cursor-pointer px-4 py-2 bg-gray-200 rounded-xl"
-                            onClick={() => handleIncreaseAmount("Cалат Цезарь")}
+                            onClick={() => handleIncreaseAmount("Салат Цезарь")}
                           >
                             +
                           </button>
                           <p className="py-1.25 font-semibold">{selectedItems["Салат Цезарь"].quantity}</p>
                           <button
                             className="cursor-pointer px-4 py-2 bg-gray-200 rounded-xl"
-                            onClick={() => handleDecreaseAmount("Cалат Цезарь")}
+                            onClick={() => handleDecreaseAmount("Салат Цезарь")}
                           >
                             -
                           </button>
