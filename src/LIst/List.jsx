@@ -4,11 +4,11 @@ import Header from "../Header/Header";
 import Basket from "../Basket/Basket";
 import Footer from "../Footer/Footer";
 
-export const QuantityContext = createContext();
 export const SelectedItemsContext = createContext();
 
 export default function List() {
 
+  
   // Логика после нажатия по полю поиска
   const [showSearch, setShowSearch] = useState(false);
 
@@ -17,31 +17,66 @@ export default function List() {
     setShowSearch(true);
   }
 
+  
+  
+  
+  
   // Логика после нажатия кнопки "Выбрать"
   const [selectedItems, setSelectedItems] = useState({});
   
   // Функция для выбора товара
-  function handleChoose(item, price, quantity) {
-    setSelectedItems(prev => ({
-      ...prev,
-      [item]: [price, quantity],
-    }));
+  function handleChoose(itemName, price) {
+    setSelectedItems((prev) => {
+      const existing = prev[itemName];
+      if (!existing) {
+        return {
+          ...prev,
+          [itemName]: {price, quantity: 1}
+        };
+      } else {
+        return {
+          ...prev,
+          [itemName]: {
+            ...existing,
+            quantity: existing.quantity + 1
+          }
+        }
+      }
+    }
+  )
+}
+
+  function handleIncreaseAmount(itemName) {
+    selectedItems((prev) => {
+      const item = prev[itemName];
+      if (!item) return prev;
+      return {
+        ...prev,
+        [itemName]:{...item, quantity: item.quantity + 1}
+      }
+    })
   }
 
-  console.log(selectedItems)
+  function handleDecreaseAmount(itemName) {
+    selectedItems((prev) => {
+      const item = prev[itemName];
+      if (!item) return prev;
+      if (item.quantity <= 1) {
+        const newState = {...prev};
+        delete newState[itemName];
+        return newState;
+      } else {
+        return {
+          ...prev,
+          [itemName]: {...item, quantity: item.quantity - 1}
+        }
+      }
+    })
+  }
+  
+  
 
-  // Увеличение кол-ва товара
-  const [quantity, setQuantity] = useState(0);
-  
-  // Функция для увеличения количества товара
-  function increaseAmount() {
-    setQuantity(prev => prev + 1);
-  }
-  
-  // Функция для уменьшения количества товаgра
-  function decreaseAmount() {
-    setQuantity(prev => prev - 1);
-  }
+
 
 
   // Логика отображения интерфейса "Корзина" после нажатия кнопки "Корзина" (тут передаем функцию как колбек в Footer.jsx)
@@ -149,14 +184,14 @@ export default function List() {
                         <div className="flex gap-6">
                           <button
                             className="cursor-pointer px-4 py-2 bg-gray-200 rounded-xl"
-                            onClick={increaseAmount}
+                            onClick={() => handleIncreaseAmount("Cалат Цезарь")}
                           >
                             +
                           </button>
-                          <p className="py-1.25 font-semibold">{quantity}</p>
+                          <p className="py-1.25 font-semibold">{selectedItems["Салат Цезарь"].quantity}</p>
                           <button
                             className="cursor-pointer px-4 py-2 bg-gray-200 rounded-xl"
-                            onClick={decreaseAmount}
+                            onClick={() => handleDecreaseAmount("Cалат Цезарь")}
                           >
                             -
                           </button>
@@ -168,8 +203,7 @@ export default function List() {
                                      rounded-xl h-10 px-4 bg-[#f4f2f0] text-[#181411] 
                                      text-sm font-bold leading-normal tracking-[0.015em]"
                           onClick={() => {
-                            increaseAmount()
-                            handleChoose("Салат Цезарь", 320, quantity);
+                            handleChoose("Салат Цезарь", 320);
                           }}
                         >
                           <span className="truncate cursor-pointer">Выбрать</span>
@@ -266,4 +300,3 @@ export default function List() {
     </>
   );
 }
-
