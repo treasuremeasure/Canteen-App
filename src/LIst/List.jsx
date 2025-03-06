@@ -108,7 +108,7 @@ console.log(selectedItems)
           {showSearch ? (
             <SearchInterface />
           ) : (
-            <QuantityContext.Provider value={Object.values(selectedItems).reduce((total, item) => total + item.quantity, 0)}>  {/*разобрать*/}
+            <QuantityContext.Provider value={Object.values(selectedItems).reduce((total, item) => total + item.quantity, 0)}>  
               <Header/>
               <div className="px-4 py-3 my-4">
                 <label className="flex flex-col min-w-40 h-12 w-full">

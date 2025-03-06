@@ -13,9 +13,9 @@ export default function Basket({onReturnFromBasket}) {
     const firstPrice = firstKey ? basket[firstKey].price : null; // Извлекаем значение url
 
 
-    const secondKey = Object.keys(basket)[0]; // Получаем первый ключ
-    const secondUrl = firstKey ? basket[secondUrl].url : null; // Извлекаем значение url
-    const secondprice = firstKey ? basket[secondprice].price : null; // Извлекаем 
+    const secondKey = Object.keys(basket)[1]; // Получаем первый ключ
+    const secondUrl = secondKey ? basket[secondKey].url : null; // Извлекаем значение url
+    const secondprice = secondKey ? basket[secondKey].price : null; // Извлекаем 
 
 
     return (
@@ -111,17 +111,17 @@ export default function Basket({onReturnFromBasket}) {
                             <div
                                 className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg w-14 h-14"
                                 style={{
-                                    backgroundImage: secondUrl ? `url(${secondUrl})` : '',,
+                                    backgroundImage: secondUrl ? `url(${secondUrl})` : '',
                                 }}
                             >
                                 
                             </div>
                             <div className="flex flex-col justify-center">
                                 <p className="text-[#1C160C] text-base font-medium leading-normal">
-                                    Салат авокадо
+                                {secondKey}
                                 </p>
                                 <p className="text-[#A18249] text-sm font-normal leading-normal">
-                                    300 руб
+                                {secondprice} руб
                                 </p>
                             </div>
                         </div>
