@@ -6,11 +6,8 @@ export default function Basket({onReturnFromBasket}) {
 
     const basket = useContext(SelectedItemsContext)
 
-    function handleIncreaseAmount(itemName) {
-        setSelec
-    }
+  
 
-    
     return (
         <>
             <div
@@ -86,7 +83,7 @@ export default function Basket({onReturnFromBasket}) {
                                     -
                                 </button>
                                 <p>{item.quantity}</p>
-                                <button onClick={() => handleIncreaseAmount(itemName)} className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
+                                <button className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
                                     +
                                 </button>
                             </div>

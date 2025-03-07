@@ -101,7 +101,7 @@ console.log(Object.entries(selectedItems))
        {showBasket ? (
       
         <SelectedItemsContext.Provider value={selectedItems}>
-          <Basket onReturnFromBasket={handleHideBasket}/>
+          <Basket onReturnFromBasket={handleHideBasket} setSelectedItems={setSelectedItems}/>
         </SelectedItemsContext.Provider>
     ) : (
         <>
