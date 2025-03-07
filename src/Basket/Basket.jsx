@@ -6,18 +6,11 @@ export default function Basket({onReturnFromBasket}) {
 
     const basket = useContext(SelectedItemsContext)
 
-    console.log(basket)
+    function handleIncreaseAmount(itemName) {
+        setSelec
+    }
 
-    const firstKey = Object.keys(basket)[0]; // Получаем первый ключ
-    const firstUrl = firstKey ? basket[firstKey].url : null; // Извлекаем значение url
-    const firstPrice = firstKey ? basket[firstKey].price : null; // Извлекаем значение url
-
-
-    const secondKey = Object.keys(basket)[1]; // Получаем первый ключ
-    const secondUrl = secondKey ? basket[secondKey].url : null; // Извлекаем значение url
-    const secondprice = secondKey ? basket[secondKey].price : null; // Извлекаем 
-
-
+    
     return (
         <>
             <div
@@ -68,21 +61,22 @@ export default function Basket({onReturnFromBasket}) {
                                 </div>
                     </div>
 
-                    {/* Блок товара #1 */}
-                    <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 justify-between">
+                    {/* Карточка товара */}
+                    {Object.entries(basket).map(([itemName, item]) => (
+                    <div key={itemName} className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 justify-between">
                         <div className="flex items-center gap-4">
                             <div
                                 className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg w-14 h-14"
                                 style={{
-                                    backgroundImage: firstUrl ? `url(${firstUrl})` : '',
+                                    backgroundImage:  `url(${item.url})`,
                                 }}
                             ></div>
                             <div className="flex flex-col justify-center">
                                 <p className="text-[#1C160C] text-base font-medium leading-normal">
-                                    {firstKey}
+                                    {itemName}
                                 </p>
                                 <p className="text-[#A18249] text-sm font-normal leading-normal">
-                                    {firstPrice} р.
+                                    {item.price} р.
                                 </p>
                             </div>
                         </div>
@@ -91,58 +85,14 @@ export default function Basket({onReturnFromBasket}) {
                                 <button className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
                                     -
                                 </button>
-                                <input
-                                    className="text-base font-medium leading-normal w-4 p-0 text-center bg-transparent focus:outline-0 
-                                               focus:ring-0 focus:border-none border-none appearance-none"
-                                    type="number"
-                                    value="1"
-                                    readOnly
-                                />
-                                <button className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
+                                <p>{item.quantity}</p>
+                                <button onClick={() => handleIncreaseAmount(itemName)} className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
                                     +
                                 </button>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Блок товара #2 */}
-                    <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 justify-between">
-                        <div className="flex items-center gap-4">
-                            <div
-                                className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg w-14 h-14"
-                                style={{
-                                    backgroundImage: secondUrl ? `url(${secondUrl})` : '',
-                                }}
-                            >
-                                
-                            </div>
-                            <div className="flex flex-col justify-center">
-                                <p className="text-[#1C160C] text-base font-medium leading-normal">
-                                {secondKey}
-                                </p>
-                                <p className="text-[#A18249] text-sm font-normal leading-normal">
-                                {secondprice} руб
-                                </p>
-                            </div>
-                        </div>
-                        <div className="shrink-0">
-                            <div className="flex items-center gap-2 text-[#1C160C]">
-                                <button className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
-                                    -
-                                </button>
-                                <input
-                                    className="text-base font-medium leading-normal w-4 p-0 text-center bg-transparent focus:outline-0 
-                                               focus:ring-0 focus:border-none border-none appearance-none"
-                                    type="number"
-                                    value="1"
-                                    readOnly
-                                />
-                                <button className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
-                                    +
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    </div>    
+                    ))}          
                 </div>
 
                 {/* Нижняя часть - итоги и кнопка */}
@@ -151,7 +101,7 @@ export default function Basket({onReturnFromBasket}) {
                         <div className="flex justify-between gap-x-6 py-2">
                             <p className="text-[#A18249] text-sm font-normal leading-normal">Итого</p>
                             <p className="text-[#1C160C] text-sm font-normal leading-normal text-right">
-                                469 руб
+                                {Object.values(basket).reduce((total, item) => total + item.price * item.quantity, 0)}
                             </p>
                         </div>
                         <div className="flex justify-between gap-x-6 py-2">

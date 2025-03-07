@@ -48,6 +48,7 @@ export default function List() {
 }
 
 console.log(selectedItems)
+console.log(Object.entries(selectedItems))
 
   function handleIncreaseAmount(itemName) {
     setSelectedItems((prev) => {
