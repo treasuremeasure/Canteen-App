@@ -4,12 +4,11 @@ import Header from "../Header/Header";
 import Basket from "../Basket/Basket";
 import Footer from "../Footer/Footer";
 
+
 export const QuantityContext = createContext();
 export const SelectedItemsContext = createContext();
 
 export default function List() {
-
-  
   // Логика после нажатия по полю поиска
   const [showSearch, setShowSearch] = useState(false);
 
@@ -18,13 +17,9 @@ export default function List() {
     setShowSearch(true);
   }
 
-  
-  
-
-
   // Логика после нажатия кнопки "Выбрать"
   const [selectedItems, setSelectedItems] = useState({});
-  
+
   // Функция для выбора товара
   function handleChoose(itemName, price, url) {
     setSelectedItems((prev) => {
@@ -32,85 +27,94 @@ export default function List() {
       if (!existing) {
         return {
           ...prev,
-          [itemName]: {price, quantity: 1, url}
+          [itemName]: { price, quantity: 1, url },
         };
       } else {
         return {
           ...prev,
           [itemName]: {
             ...existing,
-            quantity: existing.quantity + 1
-          }
-        }
+            quantity: existing.quantity + 1,
+          },
+        };
       }
-    }
-  )
-}
+    });
+  }
 
-console.log(selectedItems)
-console.log(Object.entries(selectedItems))
+  console.log(selectedItems);
+  console.log(Object.entries(selectedItems));
 
   function handleIncreaseAmount(itemName) {
     setSelectedItems((prev) => {
       const item = prev[itemName];
-      
+
       return {
         ...prev,
-        [itemName]:{...item, quantity: item.quantity + 1}
-      }
-    })
+        [itemName]: { ...item, quantity: item.quantity + 1 },
+      };
+    });
   }
 
   function handleDecreaseAmount(itemName) {
     setSelectedItems((prev) => {
       const item = prev[itemName];
-      
+
       if (item.quantity <= 1) {
-        const newState = {...prev};
+        const newState = { ...prev };
         delete newState[itemName];
         return newState;
       } else {
         return {
           ...prev,
-          [itemName]: {...item, quantity: item.quantity - 1}
-        }
+          [itemName]: { ...item, quantity: item.quantity - 1 },
+        };
       }
-    })
+    });
   }
-  
-  
-
-
-
 
   // Логика отображения интерфейса "Корзина" после нажатия кнопки "Корзина" (тут передаем функцию как колбек в Footer.jsx)
   const [showBasket, setShowBasket] = useState(false);
 
   function handleShowBasket() {
-    setShowBasket(true)
+    setShowBasket(true);
   }
 
   // Логика закрытия интерфейса "Корзина" после нажатия кнопки "Назад" (тут передаем функцию как колбек в Basket.jsx)
   function handleHideBasket() {
-    setShowBasket(false)
+    setShowBasket(false);
+  }
+
+  const [showListSalads, setShowListSalads] = useState(false);
+
+  function handleShowListSalads() {
+    setShowListSalads(true);
   }
 
   return (
-    <> 
-      {/*Логика отображения интерфейса Корзины*/}
-       {showBasket ? (
-      
+    <>
+      {/* Логика отображения интерфейса Корзины */}
+      {showBasket ? (
         <SelectedItemsContext.Provider value={selectedItems}>
-          <Basket onReturnFromBasket={handleHideBasket} setSelectedItems={setSelectedItems}/>
+          <Basket
+            onReturnFromBasket={handleHideBasket}
+            setSelectedItems={setSelectedItems}
+            onIncreaseAmount={handleIncreaseAmount}
+            onDecreaseAmount={handleDecreaseAmount}
+          />
         </SelectedItemsContext.Provider>
-    ) : (
+      ) : (
         <>
-        {/*Логика отображения интерфейса поиска*/}
+          {/* Логика отображения интерфейса поиска */}
           {showSearch ? (
             <SearchInterface />
           ) : (
-            <QuantityContext.Provider value={Object.values(selectedItems).reduce((total, item) => total + item.quantity, 0)}>  
-              <Header/>
+            <QuantityContext.Provider
+              value={Object.values(selectedItems).reduce(
+                (total, item) => total + item.quantity,
+                0
+              )}
+            >
+              <Header />
               <div className="px-4 py-3 my-4">
                 <label className="flex flex-col min-w-40 h-12 w-full">
                   <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
@@ -120,19 +124,11 @@ console.log(Object.entries(selectedItems))
                       data-icon="MagnifyingGlass"
                       data-size="24px"
                       data-weight="regular"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24px"
-                        height="24px"
-                        fill="currentColor"
-                        viewBox="0 0 256 256"
-                      >
-                        <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
-                      </svg>
-                    </div>
+                    ></div>
                     <input
-                      onClick={() => {handleSwitchToSearchInterface()}}
+                      onClick={() => {
+                        handleSwitchToSearchInterface();
+                      }}
                       placeholder="Искать..."
                       className="form-input flex w-full min-w-0 flex-1 resize-none 
                                  overflow-hidden rounded-xl text-[#181411] 
@@ -151,24 +147,30 @@ console.log(Object.entries(selectedItems))
                                  border-b-[#181411] text-[#181411] pb-[13px] pt-4"
                       href="#"
                     >
-                      <p className="text-[#181411] text-sm font-bold leading-normal tracking-[0.015em]">
+                      <button className="text-[#181411] text-sm font-bold leading-normal tracking-[0.015em]">
                         Популярное
-                      </p>
+                      </button>
                     </a>
                     <a
                       className="flex flex-col items-center justify-center border-b-[3px] 
                                  border-b-transparent text-[#897361] pb-[13px] pt-4"
                       href="#"
                     >
-                      <p className="text-[#897361] text-sm font-bold leading-normal tracking-[0.015em]">
-                        Салаты
-                      </p>
+                      {showListSalads ? (
+                        <ListSalads showBasket={showBasket}/>
+                      ) : (
+                        <button
+                          onClick={() => handleShowListSalads()}
+                          className="text-[#897361] text-sm font-bold leading-normal tracking-[0.015em]"
+                        >
+                          Салаты
+                        </button>
+                      )}
                     </a>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-1 gap-3 p-4">
-
                   {/* Цезарь */}
                   <div className="flex h-full flex-col gap-4 rounded-xl bg-white shadow-md min-w-40">
                     <div
@@ -194,7 +196,9 @@ console.log(Object.entries(selectedItems))
                           >
                             +
                           </button>
-                          <p className="py-1.25 font-semibold">{selectedItems["Салат Цезарь"].quantity}</p>
+                          <p className="py-1.25 font-semibold">
+                            {selectedItems["Салат Цезарь"].quantity}
+                          </p>
                           <button
                             className="cursor-pointer px-4 py-2 bg-gray-200 rounded-xl"
                             onClick={() => handleDecreaseAmount("Салат Цезарь")}
@@ -209,7 +213,11 @@ console.log(Object.entries(selectedItems))
                                      rounded-xl h-10 px-4 bg-[#f4f2f0] text-[#181411] 
                                      text-sm font-bold leading-normal tracking-[0.015em]"
                           onClick={() => {
-                            handleChoose("Салат Цезарь", 320, 'https://cdn.usegalileo.ai/sdxl10/99bc0a3e-adb9-448f-b422-e447f7a72854.png');
+                            handleChoose(
+                              "Салат Цезарь",
+                              320,
+                              "https://cdn.usegalileo.ai/sdxl10/99bc0a3e-adb9-448f-b422-e447f7a72854.png"
+                            );
                           }}
                         >
                           <span className="truncate cursor-pointer">Выбрать</span>
@@ -217,7 +225,6 @@ console.log(Object.entries(selectedItems))
                       )}
                     </div>
                   </div>
-
 
                   {/* Салат Авокадо */}
                   <div className="flex h-full flex-col gap-4 rounded-xl bg-white shadow-md min-w-40">
@@ -243,7 +250,9 @@ console.log(Object.entries(selectedItems))
                           >
                             +
                           </button>
-                          <p className="py-1.25 font-semibold">{selectedItems["Салат Авокадо"].quantity}</p>
+                          <p className="py-1.25 font-semibold">
+                            {selectedItems["Салат Авокадо"].quantity}
+                          </p>
                           <button
                             className="cursor-pointer px-4 py-2 bg-gray-200 rounded-xl"
                             onClick={() => handleDecreaseAmount("Салат Авокадо")}
@@ -258,7 +267,11 @@ console.log(Object.entries(selectedItems))
                                      h-10 px-4 bg-[#f4f2f0] text-[#181411] text-sm 
                                      font-bold leading-normal tracking-[0.015em]"
                           onClick={() => {
-                            handleChoose("Салат Авокадо", 250, 'https://cdn.usegalileo.ai/sdxl10/ad17b129-0ea1-4b24-ae21-e9a990fc94ea.png');
+                            handleChoose(
+                              "Салат Авокадо",
+                              250,
+                              "https://cdn.usegalileo.ai/sdxl10/ad17b129-0ea1-4b24-ae21-e9a990fc94ea.png"
+                            );
                           }}
                         >
                           <span className="truncate">Выбрать</span>
@@ -266,9 +279,6 @@ console.log(Object.entries(selectedItems))
                       )}
                     </div>
                   </div>
-
-
-
 
                   {/* Cэндвич Тюна */}
                   <div className="flex h-full flex-col gap-4 rounded-xl bg-white shadow-md min-w-40">
@@ -279,7 +289,7 @@ console.log(Object.entries(selectedItems))
                     <div className="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
                       <div>
                         <p className="text-[#181411] text-base font-medium leading-normal">
-                        Cэндвич "Тюна"
+                          Cэндвич "Тюна"
                         </p>
                         <p className="text-[#897361] text-sm font-normal leading-normal">
                           450 р.
@@ -288,37 +298,45 @@ console.log(Object.entries(selectedItems))
 
                       {selectedItems["Сэндвич Тюна"] ? (
                         <div className="flex gap-6">
+                          <button
+                            className="cursor-pointer px-4 py-2 bg-gray-200 rounded-xl"
+                            onClick={() => handleIncreaseAmount("Сэндвич Тюна")}
+                          >
+                            +
+                          </button>
+                          <p className="py-1.25 font-semibold">
+                            {selectedItems["Сэндвич Тюна"].quantity}
+                          </p>
+                          <button
+                            className="cursor-pointer px-4 py-2 bg-gray-200 rounded-xl"
+                            onClick={() => handleDecreaseAmount("Сэндвич Тюна")}
+                          >
+                            -
+                          </button>
+                        </div>
+                      ) : (
                         <button
-                          className="cursor-pointer px-4 py-2 bg-gray-200 rounded-xl"
-                          onClick={() => handleIncreaseAmount("Сэндвич Тюна")}
+                          className="flex min-w-[84px] max-w-[480px] cursor-pointer 
+                                     items-center justify-center overflow-hidden 
+                                     rounded-xl h-10 px-4 bg-[#f4f2f0] text-[#181411] 
+                                     text-sm font-bold leading-normal tracking-[0.015em]"
+                          onClick={() => {
+                            handleChoose(
+                              "Сэндвич Тюна",
+                              450,
+                              "https://cdn.usegalileo.ai/sdxl10/032aac91-2c80-4374-ab1b-232dab963a6a.png"
+                            );
+                          }}
                         >
-                          +
+                          <span className="truncate">Выбрать</span>
                         </button>
-                        <p className="py-1.25 font-semibold">{selectedItems["Сэндвич Тюна"].quantity}</p>
-                        <button
-                          className="cursor-pointer px-4 py-2 bg-gray-200 rounded-xl"
-                          onClick={() => handleDecreaseAmount("Сэндвич Тюна")}
-                        >
-                          -
-                        </button>
-                      </div>
-                      ) :
-                        (<button
-                        className="flex min-w-[84px] max-w-[480px] cursor-pointer 
-                                   items-center justify-center overflow-hidden 
-                                   rounded-xl h-10 px-4 bg-[#f4f2f0] text-[#181411] 
-                                   text-sm font-bold leading-normal tracking-[0.015em]"
-
-                        onClick={() => {handleChoose('Сэндвич Тюна', 450, 'https://cdn.usegalileo.ai/sdxl10/032aac91-2c80-4374-ab1b-232dab963a6a.png')}}
-                      >
-                        <span className="truncate">Выбрать</span>
-                      </button>)}
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
 
-              <Footer onShowBasket={handleShowBasket} naming='Корзина'/>
+              <Footer onShowBasket={handleShowBasket} naming="Корзина" />
             </QuantityContext.Provider>
           )}
         </>

@@ -1,6 +1,6 @@
 import React, {useContext} from "react"
-import { QuantityContext } from "../LIst/List"
-import List from "../LIst/List";
+import { QuantityContext } from "../LIst/ListPopular"
+import List from "../LIst/ListPopular";
 
 export default function Footer(props) {
 

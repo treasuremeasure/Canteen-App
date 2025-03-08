@@ -1,4 +1,4 @@
-import List from "./LIst/List"
+import List from "./LIst/ListPopular"
 import Footer from "./Footer/Footer"
 
 function App() {
