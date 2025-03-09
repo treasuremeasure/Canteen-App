@@ -4,6 +4,7 @@ import Header from "../Header/Header";
 import Basket from "../Basket/Basket";
 import Footer from "../Footer/Footer";
 import ListSalads from "./ListSalads";
+import { motion } from "framer-motion";
 
 export const QuantityContext = createContext();
 export const SelectedItemsContext = createContext();
@@ -128,6 +129,14 @@ export default function List() {
                   </div>
                 </div>
 
+                <motion.div
+                  key={showListSalads ? "salads" : "popular"}
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 50 }}
+                  transition={{ duration: 0.5 }}
+                >
+
                 {showListSalads ? (
                   <ListSalads
                     selectedItems={selectedItems}
@@ -171,6 +180,7 @@ export default function List() {
                     />
                   </div>
                 )}
+                </motion.div>
               </div>
               <Footer onShowBasket={handleShowBasket} naming="Корзина" />
             </QuantityContext.Provider>
