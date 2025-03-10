@@ -1,33 +1,36 @@
 import { useContext, useState } from "react"
 import List, { SelectedItemsContext } from "../LIst/ListPopular"
 import Footer from "../Footer/Footer"
+import OrderSuccess from "./OrderSuccess"
 
-export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecreaseAmount}) {
-
+export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecreaseAmount, setSelectedItems}) {
+    const [showOrderSuccess, setShowOrderSuccess] = useState(false)
     const basket = useContext(SelectedItemsContext)
-  
+
 
     return (
         <>
-            <div
-                className="relative flex flex-col min-h-screen bg-white justify-between group/design-root overflow-x-hidden"
-               
-            >
-                <div>
-                    {/* Верхняя панель */}
-                    <div className="flex items-center bg-white p-4 pb-2 justify-between">
-                        {/* Левая иконка стрелки */}
-                        <button onClick={onReturnFromBasket} className="text-[#1C160C] flex w-12 shrink-0 items-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24px"
-                                height="24px"
-                                fill="currentColor"
-                                viewBox="0 0 256 256"
-                            >
-                                <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
-                            </svg>
-                        </button>
+            {showOrderSuccess ? (
+                <OrderSuccess setSelectedItems={setSelectedItems} />
+            ) : (
+                <div
+                    className="relative flex flex-col min-h-screen bg-white justify-between group/design-root overflow-x-hidden"
+                >
+                    <div>
+                        {/* Верхняя панель */}
+                        <div className="flex items-center bg-white p-4 pb-2 justify-between">
+                            {/* Левая иконка стрелки */}
+                            <button onClick={onReturnFromBasket} className="text-[#1C160C] flex w-12 shrink-0 items-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24px"
+                                    height="24px"
+                                    fill="currentColor"
+                                    viewBox="0 0 256 256"
+                                >
+                                    <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
+                                </svg>
+                            </button>
 
               
                                 {/* Заголовок */}
@@ -47,62 +50,63 @@ export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecrease
                                         </div>
                                     </button>
                                 </div>
+                        </div>
+
+                        {/* Карточка товара */}
+                        {Object.entries(basket).map(([itemName, item]) => (
+                        <div key={itemName} className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 justify-between">
+                            <div className="flex items-center gap-4">
+                                <div
+                                    className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg w-14 h-14"
+                                    style={{
+                                        backgroundImage:  `url(${item.url})`,
+                                    }}
+                                ></div>
+                                <div className="flex flex-col justify-center">
+                                    <p className="text-[#1C160C] text-base font-medium leading-normal">
+                                        {itemName}
+                                    </p>
+                                    <p className="text-[#A18249] text-sm font-normal leading-normal">
+                                        {item.price} р.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="shrink-0">
+                                <div className="flex items-center gap-2 text-[#1C160C]">
+                                    <button onClick={() => onDecreaseAmount(itemName)} className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
+                                        -
+                                    </button>
+                                    <p>{item.quantity}</p>
+                                    <button onClick={() => onIncreaseAmount(itemName)} className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        </div>    
+                        ))}          
                     </div>
 
-                    {/* Карточка товара */}
-                    {Object.entries(basket).map(([itemName, item]) => (
-                    <div key={itemName} className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 justify-between">
-                        <div className="flex items-center gap-4">
-                            <div
-                                className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg w-14 h-14"
-                                style={{
-                                    backgroundImage:  `url(${item.url})`,
-                                }}
-                            ></div>
-                            <div className="flex flex-col justify-center">
-                                <p className="text-[#1C160C] text-base font-medium leading-normal">
-                                    {itemName}
+                    {/* Нижняя часть - итоги и кнопка */}
+                    <div>
+                        <div className="p-4">
+                            <div className="flex justify-between gap-x-6 py-2">
+                                <p className="text-[#A18249] text-sm font-normal leading-normal">Итого</p>
+                                <p className="text-[#1C160C] text-sm font-normal leading-normal text-right">
+                                    {Object.values(basket).reduce((total, item) => total + item.price * item.quantity, 0)} р.
                                 </p>
-                                <p className="text-[#A18249] text-sm font-normal leading-normal">
-                                    {item.price} р.
+                            </div>
+                            <div className="flex justify-between gap-x-6 py-2">
+                                <p className="text-[#A18249] text-sm font-normal leading-normal">Скидка</p>
+                                <p className="text-[#1C160C] text-sm font-normal leading-normal text-right">
+                                    0 руб
                                 </p>
                             </div>
                         </div>
-                        <div className="shrink-0">
-                            <div className="flex items-center gap-2 text-[#1C160C]">
-                                <button onClick={() => onDecreaseAmount(itemName)} className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
-                                    -
-                                </button>
-                                <p>{item.quantity}</p>
-                                <button onClick={() => onIncreaseAmount(itemName)} className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
-                                    +
-                                </button>
-                            </div>
-                        </div>
-                    </div>    
-                    ))}          
-                </div>
-
-                {/* Нижняя часть - итоги и кнопка */}
-                <div>
-                    <div className="p-4">
-                        <div className="flex justify-between gap-x-6 py-2">
-                            <p className="text-[#A18249] text-sm font-normal leading-normal">Итого</p>
-                            <p className="text-[#1C160C] text-sm font-normal leading-normal text-right">
-                                {Object.values(basket).reduce((total, item) => total + item.price * item.quantity, 0)}
-                            </p>
-                        </div>
-                        <div className="flex justify-between gap-x-6 py-2">
-                            <p className="text-[#A18249] text-sm font-normal leading-normal">Скидка</p>
-                            <p className="text-[#1C160C] text-sm font-normal leading-normal text-right">
-                                0 руб
-                            </p>
-                        </div>
+                        <Footer naming='Заказать' hideQuantity={true} />
+                        <div className="h-5 bg-white"></div>
                     </div>
-                    <Footer naming='Заказать' hideQuantity={true} />
-                    <div className="h-5 bg-white"></div>
                 </div>
-            </div>
+            )}
         </>
     );
 }
