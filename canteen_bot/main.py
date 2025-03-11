@@ -17,7 +17,7 @@ def start(message):
     global user_chat_id
     user_chat_id = message.chat.id  # Сохраняем ID чата из объекта message
     markup = InlineKeyboardMarkup()
-    menu_button = InlineKeyboardButton("Меню", web_app=WebAppInfo(url='https://b897-62-60-234-203.ngrok-free.app'))
+    menu_button = InlineKeyboardButton("Меню", web_app=WebAppInfo(url='https://369f-62-60-234-203.ngrok-free.app'))
     markup.add(menu_button)
 
     bot.send_message(message.chat.id, "Привет! По кнопке ниже ты можешь открыть меню", reply_markup=markup)

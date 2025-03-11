@@ -1,10 +1,12 @@
 import React, { useState, useContext } from "react";
 import { QuantityContext } from "../LIst/ListPopular";
-import OrderSuccess from "../Basket/OrderSuccess"; // Поправил импорт с заглавной буквы
+import { OrderSuccess } from "../Basket/Basket";
 
-export default function Footer(props) {
+export default function Footer({ naming, onShowBasket, hideQuantity, setSelectedItems, resetState }) {
   const quantity = useContext(QuantityContext);
   const [showOrderSuccess, setShowOrderSuccess] = useState(false);
+
+  console.log(resetState)
 
   function handleShowOrderSuccess() {
     setShowOrderSuccess(true);
@@ -12,9 +14,8 @@ export default function Footer(props) {
 
   return (
     <>
-      {/* Если заказ оформлен - показываем OrderSuccess */}
       {showOrderSuccess ? (
-        <OrderSuccess />
+        <OrderSuccess setSelectedItems={setSelectedItems} resetState={resetState} />
       ) : (
         <div className="fixed bottom-0 left-2.5 w-full bg-white p-2">
           {quantity === 0 ? (
@@ -22,17 +23,22 @@ export default function Footer(props) {
               className="flex left-4 w-11/12 cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-gray-200 text-[#181411] text-base font-bold leading-normal tracking-[0.015em]"
               disabled
             >
-              <span className="truncate">{props.naming} ({quantity})</span>
+              <span className="truncate">
+                {naming} ({quantity})
+              </span>
             </button>
           ) : (
             <button
-              onClick={props.hideQuantity ? handleShowOrderSuccess : props.onShowBasket}
+              onClick={hideQuantity ? handleShowOrderSuccess : onShowBasket}
               className="flex left-4 w-11/12 cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-[#ee7f2b] text-[#181411] text-base font-bold leading-normal tracking-[0.015em]"
             >
-              {/* Не показываем quantity на кнопке "Заказать" */}
-              <span className="truncate">
-                {props.naming} {props.hideQuantity ? "" : `(${quantity})`}
-              </span>
+              {hideQuantity ? (
+                <span className="truncate">{naming}</span>
+              ) : (
+                <span className="truncate">
+                  {naming} ({quantity})
+                </span>
+              )}
             </button>
           )}
         </div>
@@ -40,3 +46,4 @@ export default function Footer(props) {
     </>
   );
 }
+

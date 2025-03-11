@@ -5,15 +5,23 @@ import Basket from "../Basket/Basket";
 import Footer from "../Footer/Footer";
 import ListSalads from "./ListSalads";
 import { motion } from "framer-motion";
+import ItemCard from "./ItemCard";
 
 export const QuantityContext = createContext();
-export const SelectedItemsContext = createContext();
+
 
 export default function List() {
   const [showSearch, setShowSearch] = useState(false);
   const [selectedItems, setSelectedItems] = useState({});
   const [showBasket, setShowBasket] = useState(false);
   const [showListSalads, setShowListSalads] = useState(false);
+
+const resetState = () => {
+    setSelectedItems({});
+    setShowBasket(false);
+    setShowListSalads(false);
+    setShowSearch(false);
+  };
 
   function handleSwitchToSearchInterface() {
     setShowSearch(true);
@@ -69,14 +77,16 @@ export default function List() {
   return (
     <>
       {showBasket ? (
-        <SelectedItemsContext.Provider value={selectedItems}>
+        
           <Basket
+            selectedItems={selectedItems}
             onReturnFromBasket={handleHideBasket}
             setSelectedItems={setSelectedItems}
             onIncreaseAmount={handleIncreaseAmount}
             onDecreaseAmount={handleDecreaseAmount}
+            resetState={resetState}
           />
-        </SelectedItemsContext.Provider>
+       
       ) : (
         <>
           {showSearch ? (
@@ -182,7 +192,7 @@ export default function List() {
                 )}
                 </motion.div>
               </div>
-              <Footer onShowBasket={handleShowBasket} naming="Корзина" />
+              <Footer onShowBasket={handleShowBasket} naming="Корзина" setSelectedItems={setSelectedItems} />
             </QuantityContext.Provider>
           )}
         </>
@@ -191,57 +201,6 @@ export default function List() {
   );
 }
 
-function ItemCard({
-  itemName,
-  price,
-  imageUrl,
-  selectedItems,
-  handleChoose,
-  handleIncreaseAmount,
-  handleDecreaseAmount,
-}) {
-  return (
-    <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-md h-full">
-      <div
-        className="w-full aspect-square bg-center bg-no-repeat bg-cover rounded-t-xl"
-        style={{ backgroundImage: `url(${imageUrl})` }}
-      ></div>
 
-      <div className="flex flex-col justify-between p-3 flex-grow">
-        <div>
-          <p className="text-[#181411] text-sm font-medium leading-tight">{itemName}</p>
-          <p className="text-[#897361] text-xs font-normal leading-tight mt-1">{price} р.</p>
-        </div>
-
-        {selectedItems[itemName] ? (
-          <div className="flex items-center justify-between mt-2">
-            <button
-              className="cursor-pointer px-4 py-1 bg-gray-200 rounded-xl text-lg"
-              onClick={() => handleDecreaseAmount(itemName)}
-            >
-              -
-            </button>
-            <p className="text-center font-semibold mx-2 text-sm">
-              {selectedItems[itemName].quantity}
-            </p>
-            <button
-              className="cursor-pointer px-4 py-1 bg-gray-200 rounded-xl text-lg"
-              onClick={() => handleIncreaseAmount(itemName)}
-            >
-              +
-            </button>
-          </div>
-        ) : (
-          <button
-            className="cursor-pointer px-3 py-1 bg-gray-200 rounded-lg mt-2 w-full text-sm"
-            onClick={() => handleChoose(itemName, price, imageUrl)}
-          >
-            Выбрать
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
 
 export {ItemCard}

@@ -1,18 +1,16 @@
-import { useContext, useState } from "react"
-import List, { SelectedItemsContext } from "../LIst/ListPopular"
+import { createContext, useContext, useState } from "react"
 import Footer from "../Footer/Footer"
-import OrderSuccess from "./OrderSuccess"
+import List from "../LIst/ListPopular";
+import axios from "axios";
 
-export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecreaseAmount, setSelectedItems}) {
-    const [showOrderSuccess, setShowOrderSuccess] = useState(false)
-    const basket = useContext(SelectedItemsContext)
+export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecreaseAmount, setSelectedItems, selectedItems, resetState} ) {
+    
 
-
+   
+    
     return (
         <>
-            {showOrderSuccess ? (
-                <OrderSuccess setSelectedItems={setSelectedItems} />
-            ) : (
+           
                 <div
                     className="relative flex flex-col min-h-screen bg-white justify-between group/design-root overflow-x-hidden"
                 >
@@ -53,7 +51,7 @@ export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecrease
                         </div>
 
                         {/* Карточка товара */}
-                        {Object.entries(basket).map(([itemName, item]) => (
+                        {Object.entries(selectedItems).map(([itemName, item]) => (
                         <div key={itemName} className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 justify-between">
                             <div className="flex items-center gap-4">
                                 <div
@@ -92,7 +90,7 @@ export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecrease
                             <div className="flex justify-between gap-x-6 py-2">
                                 <p className="text-[#A18249] text-sm font-normal leading-normal">Итого</p>
                                 <p className="text-[#1C160C] text-sm font-normal leading-normal text-right">
-                                    {Object.values(basket).reduce((total, item) => total + item.price * item.quantity, 0)} р.
+                                    {Object.values(selectedItems).reduce((total, item) => total + item.price * item.quantity, 0)} р.
                                 </p>
                             </div>
                             <div className="flex justify-between gap-x-6 py-2">
@@ -102,13 +100,79 @@ export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecrease
                                 </p>
                             </div>
                         </div>
-                        <Footer naming='Заказать' hideQuantity={true} />
+                        <Footer naming='Заказать' hideQuantity={true} setSelectedItems={setSelectedItems} resetState={resetState}/>
                         <div className="h-5 bg-white"></div>
                     </div>
                 </div>
-            )}
         </>
     );
 }
 
-          
+function OrderSuccess({setSelectedItems, resetState}) {
+    const [showMenu, setShowMenu] = useState(false)
+
+    console.log(resetState)
+
+    function returnToMenu() {
+        // Отправляем сообщение в Telegram перед очисткой корзины
+        sendTelegramMessage("✅ Новый заказ создан!\n\nСтатус: Ожидает подтверждения")
+        
+        setSelectedItems({})
+        resetState() /*передаем сначала из ListPopular в Basket и Footer, затем из Basket в Footer, и уже из Footer в OrderSuccess */
+        setShowMenu(true)
+    }
+
+    const sendTelegramMessage = async (message) => {
+        try {
+            await axios.post('http://localhost:5000/send_message', {
+                message: message
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        } catch (error) {
+            console.error("Ошибка при отправке сообщения:", error)
+        }
+    }
+
+    return (
+        showMenu ? (
+            <List />
+        ) : (
+            <div className="fixed inset-0 bg-white flex flex-col items-center justify-center px-4">
+                <div className="flex flex-col items-center gap-6 mb-8">
+                    {/* Чекмарк */}
+                    <svg 
+                        width="64" 
+                        height="64" 
+                        viewBox="0 0 64 64" 
+                        fill="none" 
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <circle cx="32" cy="32" r="32" fill="#4CAF50"/>
+                        <path 
+                            d="M26.5 38.5L18 30L15 33L26.5 44.5L49.5 21.5L46.5 18.5L26.5 38.5Z" 
+                            fill="white"
+                        />
+                    </svg>
+
+                    {/* Текст успешного заказа */}
+                    <h1 className="text-[32px] font-bold text-center text-[#1C160C]">
+                        Ваш заказ успешно создан!
+                    </h1>
+                </div>
+
+                {/* Кнопка возврата в меню */}
+                <button 
+                    onClick={() => {returnToMenu()}}
+                    className="w-full max-w-[480px] h-12 bg-[#ee7f2b] rounded-full text-black font-bold"
+                >
+                    Вернуться в меню
+                </button>
+            </div>
+        )
+    )
+}
+
+export {OrderSuccess}
