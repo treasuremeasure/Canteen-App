@@ -100,7 +100,7 @@ export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecrease
                                 </p>
                             </div>
                         </div>
-                        <Footer naming='Заказать' hideQuantity={true} setSelectedItems={setSelectedItems} resetState={resetState}/>
+                        <Footer naming='Заказать' hideQuantity={true} setSelectedItems={setSelectedItems} resetState={resetState} selectedItems={selectedItems}/>
                         <div className="h-5 bg-white"></div>
                     </div>
                 </div>
@@ -108,18 +108,42 @@ export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecrease
     );
 }
 
-function OrderSuccess({setSelectedItems, resetState}) {
+function OrderSuccess({ setSelectedItems, selectedItems, resetState }) {
+    
     const [showMenu, setShowMenu] = useState(false)
 
-    console.log(resetState)
+    console.log(selectedItems)
 
     function returnToMenu() {
-        // Отправляем сообщение в Telegram перед очисткой корзины
-        sendTelegramMessage("✅ Новый заказ создан!\n\nСтатус: Ожидает подтверждения")
+        // Генерируем случайное число от 1 до 100
+        const orderNumber = Math.floor(Math.random() * 100) + 1;
         
-        setSelectedItems({})
-        resetState() /*передаем сначала из ListPopular в Basket и Footer, затем из Basket в Footer, и уже из Footer в OrderSuccess */
-        setShowMenu(true)
+        // Формируем сообщение о заказе
+        const orderDetails = Object.entries(selectedItems).map(([name, item]) => {
+            return `${name} - ${item.quantity} шт. x ${item.price} р.`;
+        }).join('\n');
+
+        const totalSum = Object.values(selectedItems)
+            .reduce((total, item) => total + item.price * item.quantity, 0);
+
+        const message = `
+✅ Новый заказ #${orderNumber}!
+
+📋 Состав заказа:
+${orderDetails}
+
+💰 Итого: ${totalSum} р.
+
+Статус: Ожидает подтверждения
+`;
+
+        // Отправляем сообщение в Telegram
+        sendTelegramMessage(message);
+        
+        // Очищаем корзину и возвращаемся в меню
+        setSelectedItems({});
+        resetState();
+        setShowMenu(true);
     }
 
     const sendTelegramMessage = async (message) => {
@@ -130,48 +154,41 @@ function OrderSuccess({setSelectedItems, resetState}) {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            })
+            });
         } catch (error) {
-            console.error("Ошибка при отправке сообщения:", error)
+            console.error("Ошибка при отправке сообщения:", error);
         }
     }
 
-    return (
-        showMenu ? (
-            <List />
-        ) : (
-            <div className="fixed inset-0 bg-white flex flex-col items-center justify-center px-4">
-                <div className="flex flex-col items-center gap-6 mb-8">
-                    {/* Чекмарк */}
-                    <svg 
-                        width="64" 
-                        height="64" 
-                        viewBox="0 0 64 64" 
-                        fill="none" 
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <circle cx="32" cy="32" r="32" fill="#4CAF50"/>
-                        <path 
-                            d="M26.5 38.5L18 30L15 33L26.5 44.5L49.5 21.5L46.5 18.5L26.5 38.5Z" 
-                            fill="white"
-                        />
-                    </svg>
-
-                    {/* Текст успешного заказа */}
-                    <h1 className="text-[32px] font-bold text-center text-[#1C160C]">
-                        Ваш заказ успешно создан!
-                    </h1>
-                </div>
-
-                {/* Кнопка возврата в меню */}
-                <button 
-                    onClick={() => {returnToMenu()}}
-                    className="w-full max-w-[480px] h-12 bg-[#ee7f2b] rounded-full text-black font-bold"
+    return showMenu ? <List /> : (
+        <div className="fixed inset-0 bg-white flex flex-col items-center justify-center px-4">
+            <div className="flex flex-col items-center gap-6 mb-8">
+                <svg 
+                    width="64" 
+                    height="64" 
+                    viewBox="0 0 64 64" 
+                    fill="none" 
+                    xmlns="http://www.w3.org/2000/svg"
                 >
-                    Вернуться в меню
-                </button>
+                    <circle cx="32" cy="32" r="32" fill="#4CAF50"/>
+                    <path 
+                        d="M26.5 38.5L18 30L15 33L26.5 44.5L49.5 21.5L46.5 18.5L26.5 38.5Z" 
+                        fill="white"
+                    />
+                </svg>
+
+                <h1 className="text-[32px] font-bold text-center text-[#1C160C]">
+                    Ваш заказ успешно создан!
+                </h1>
             </div>
-        )
+
+            <button 
+                onClick={returnToMenu}
+                className="w-full max-w-[480px] h-12 bg-[#ee7f2b] rounded-full text-black font-bold"
+            >
+                Вернуться обратно в бота
+            </button>
+        </div>
     )
 }
 

@@ -192,7 +192,7 @@ const resetState = () => {
                 )}
                 </motion.div>
               </div>
-              <Footer onShowBasket={handleShowBasket} naming="Корзина" setSelectedItems={setSelectedItems} />
+              <Footer onShowBasket={handleShowBasket} naming="Корзина" setSelectedItems={setSelectedItems} selectedItems={selectedItems} />
             </QuantityContext.Provider>
           )}
         </>

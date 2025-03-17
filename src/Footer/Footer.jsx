@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { QuantityContext } from "../LIst/ListPopular";
 import { OrderSuccess } from "../Basket/Basket";
 
-export default function Footer({ naming, onShowBasket, hideQuantity, setSelectedItems, resetState }) {
+export default function Footer({ naming, onShowBasket, hideQuantity, setSelectedItems, resetState, selectedItems }) {
   const quantity = useContext(QuantityContext);
   const [showOrderSuccess, setShowOrderSuccess] = useState(false);
 
@@ -15,7 +15,7 @@ export default function Footer({ naming, onShowBasket, hideQuantity, setSelected
   return (
     <>
       {showOrderSuccess ? (
-        <OrderSuccess setSelectedItems={setSelectedItems} resetState={resetState} />
+        <OrderSuccess setSelectedItems={setSelectedItems} resetState={resetState} selectedItems={selectedItems} />
       ) : (
         <div className="fixed bottom-0 left-2.5 w-full bg-white p-2">
           {quantity === 0 ? (
