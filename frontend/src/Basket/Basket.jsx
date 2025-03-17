@@ -1,7 +1,6 @@
-import { createContext, useContext, useState } from "react"
+import { useState } from "react"
 import Footer from "../Footer/Footer"
 import List from "../LIst/ListPopular";
-import axios from "axios";
 
 export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecreaseAmount, setSelectedItems, selectedItems, resetState} ) {
     
@@ -108,56 +107,11 @@ export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecrease
     );
 }
 
-function OrderSuccess({ setSelectedItems, selectedItems, resetState }) {
-    
+function OrderSuccess() {
     const [showMenu, setShowMenu] = useState(false)
 
-    console.log(selectedItems)
-
-    function returnToMenu() {
-        // Генерируем случайное число от 1 до 100
-        const orderNumber = Math.floor(Math.random() * 100) + 1;
-        
-        // Формируем сообщение о заказе
-        const orderDetails = Object.entries(selectedItems).map(([name, item]) => {
-            return `${name} - ${item.quantity} шт. x ${item.price} р.`;
-        }).join('\n');
-
-        const totalSum = Object.values(selectedItems)
-            .reduce((total, item) => total + item.price * item.quantity, 0);
-
-        const message = `
-✅ Новый заказ #${orderNumber}!
-
-📋 Состав заказа:
-${orderDetails}
-
-💰 Итого: ${totalSum} р.
-
-Статус: Ожидает подтверждения
-`;
-
-        // Отправляем сообщение в Telegram
-        sendTelegramMessage(message);
-        
-        // Очищаем корзину и возвращаемся в меню
-        setSelectedItems({});
-        resetState();
-        setShowMenu(true);
-    }
-
-    const sendTelegramMessage = async (message) => {
-        try {
-            await axios.post('http://localhost:5000/send_message', {
-                message: message
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        } catch (error) {
-            console.error("Ошибка при отправке сообщения:", error);
-        }
+    function handleShowMenu() {
+        setShowMenu(true)
     }
 
     return showMenu ? <List /> : (
@@ -183,7 +137,7 @@ ${orderDetails}
             </div>
 
             <button 
-                onClick={returnToMenu}
+                onClick={() => handleShowMenu()}
                 className="w-full max-w-[480px] h-12 bg-[#ee7f2b] rounded-full text-black font-bold"
             >
                 Вернуться обратно в бота
