@@ -16,6 +16,8 @@ export default function List() {
   const [showBasket, setShowBasket] = useState(false);
   const [showListSalads, setShowListSalads] = useState(false);
 
+console.log(selectedItems)
+
 const resetState = () => {
     setSelectedItems({});
     setShowBasket(false);
@@ -29,12 +31,7 @@ const resetState = () => {
 
   function handleChoose(itemName, price, url) {
     setSelectedItems((prev) => {
-      const existing = prev[itemName];
-      if (!existing) {
         return { ...prev, [itemName]: { price, quantity: 1, url } };
-      } else {
-        return { ...prev, [itemName]: { ...existing, quantity: existing.quantity + 1 } };
-      }
     });
   }
 

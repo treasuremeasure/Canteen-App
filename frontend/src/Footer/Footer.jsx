@@ -6,10 +6,25 @@ export default function Footer({ naming, onShowBasket, hideQuantity, setSelected
   const quantity = useContext(QuantityContext);
   const [showOrderSuccess, setShowOrderSuccess] = useState(false);
 
-  console.log(resetState)
+  async function handleShowOrderSuccess() {
+    try {
+      const response = await fetch('http://localhost:8000/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items: selectedItems })
+      });
 
-  function handleShowOrderSuccess() {
-    setShowOrderSuccess(true);
+      if (!response.ok) {
+        throw new Error('Ошибка при отправке заказа');
+      }
+
+      setShowOrderSuccess(true);
+    } catch (error) {
+      console.error('Ошибка:', "Ваш заказ не был добавлен");
+      // Здесь можно добавить обработку ошибки, например показать уведомление пользователю
+    }
   }
 
   return (
