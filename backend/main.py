@@ -2,7 +2,6 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
 
-
 TOKEN = "7828254230:AAENGiJiy4BnHRk9Ch2Vg8iZj2L6x4FhiwU"
 bot = telebot.TeleBot(TOKEN)
 
@@ -18,9 +17,10 @@ def start(message):
     menu_button = InlineKeyboardButton("Меню", web_app=WebAppInfo(url='https://d4d3-62-60-234-203.ngrok-free.app'))
     markup.add(menu_button)
 
+    print(user_chat_id)
+
     bot.send_message(message.chat.id, "Привет! По кнопке ниже ты можешь открыть меню", reply_markup=markup)
 
 
-def run_bot():
-    bot.polling(none_stop=True)
+bot.polling()
 
