@@ -3,7 +3,6 @@ from contextlib import asynccontextmanager
 from sqlalchemy import select, insert
 from .database import database, engine  # твой импорт базы данных
 from .models import Product
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from .schemas import ProductCreate
 
 
