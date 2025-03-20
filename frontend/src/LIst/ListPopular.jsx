@@ -67,7 +67,7 @@ export default function List() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/products");
+        const response = await fetch("http://localhost:8000/products/?category=Популярное");
         if (!response.ok) {
           throw new Error("Ошибка при получении данных");
         }
@@ -195,3 +195,4 @@ export default function List() {
     </>
   );
 }
+
