@@ -31,40 +31,54 @@ export default function List() {
   const handleShowListSalads = () => setShowListSalads(true);
   const handleShowPopular = () => setShowListSalads(false);
 
-  function handleChoose(itemName, price, url) {
+  function handleChoose(id, itemName, price, url) {
     setSelectedItems((prev) => ({
       ...prev,
-      [itemName]: { price, quantity: 1, url },
+      [id]: { itemName, price, quantity: 1, url }, // ✅ используем id как ключ
     }));
   }
+   
 
-  function handleIncreaseAmount(itemName) {
+  function handleIncreaseAmount(id) {
     setSelectedItems((prev) => {
-      const item = prev[itemName];
-      if (item.quantity < products.pr_quantity) {
+      const item = prev[id];
+      const product = products.find(p => p.id === id);
+  
+      if (!product) {
+        console.error(`Товар с id "${id}" не найден`);
+        return prev;
+      }
+  
+      if (item.quantity >= product.pr_quantity) {
+        alert(`Извините, доступно только ${product.pr_quantity} штук`);
+        return prev;
+      }
+  
       return {
         ...prev,
-        [itemName]: { ...item, quantity: item.quantity + 1 },
-       };
-      }
+        [id]: { ...item, quantity: item.quantity + 1 },
+      };
     });
   }
+  
 
-  function handleDecreaseAmount(itemName) {
+  function handleDecreaseAmount(id) {
     setSelectedItems((prev) => {
-      const item = prev[itemName];
+      const item = prev[id];
+  
       if (item.quantity <= 1) {
         const newState = { ...prev };
-        delete newState[itemName];
+        delete newState[id];
         return newState;
       } else {
         return {
           ...prev,
-          [itemName]: { ...item, quantity: item.quantity - 1 },
+          [id]: { ...item, quantity: item.quantity - 1 },
         };
       }
     });
   }
+  
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -166,12 +180,14 @@ export default function List() {
                       handleChoose={handleChoose}
                       handleIncreaseAmount={handleIncreaseAmount}
                       handleDecreaseAmount={handleDecreaseAmount}
+                      setSelectedItems={setSelectedItems}
                     />
                   ) : (
                     <div className="grid grid-cols-2 gap-3">
                       {products.map((product) => (
                         <ItemCard
                           key={product.id}
+                          id={product.id}
                           itemName={product.itemname}
                           price={product.price}
                           imageUrl={product.url}

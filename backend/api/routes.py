@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from contextlib import asynccontextmanager
 from sqlalchemy import select, insert
 from .database import database, engine  # твой импорт базы данных
@@ -33,11 +33,17 @@ app.add_middleware(
 
 
 # ручки БД
-@app.get("/products",
-         tags=["Работа с БД"],
-         summary="Достаем все записи из таблицы products")
-async def get_products():
-    query = select(Product)  # Создаем запрос для получения всех продуктов
+@app.get("/products/")
+async def get_products(category: str = Query("Популярное")):
+    # Здесь вы можете использовать category для фильтрации продуктов
+    query = select(Product).where(Product.category == category)  # Предполагается, что у вас есть поле category в модели Product
+    results = await database.fetch_all(query)  # Выполняем запрос
+    return results  # Возвращаем результаты
+
+@app.get("/products/")
+async def get_products(category: str = Query("Салаты")):
+    # Здесь вы можете использовать category для фильтрации продуктов
+    query = select(Product).where(Product.category == category)  # Предполагается, что у вас есть поле category в модели Product
     results = await database.fetch_all(query)  # Выполняем запрос
     return results  # Возвращаем результаты
 
@@ -50,7 +56,8 @@ async def create_product(product: ProductCreate):
         itemname=product.itemName,
         price=product.price,
         pr_quantity=product.pr_quantity,
-        url=product.url
+        url=product.url,
+        category=product.category
     )
     await database.execute(query)
     return {"message": "Блюдо успешно добавлено", "Product": product}

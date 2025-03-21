@@ -21,7 +21,7 @@ def start(message):
 
 @bot.message_handler(func=lambda message: message.text == 'Меню')
 def add_meal(message):
-    bot.send_message(message.chat.id, "Напиши: название блюда, цену, доступное количество, ссылку на изображение")
+    bot.send_message(message.chat.id, "Напиши: название блюда, цену, доступное количество, ссылку на изображение, категорию")
 
 @bot.message_handler(content_types=['text'])
 def add_product(message):
@@ -32,7 +32,8 @@ def add_product(message):
        "itemName": message_array[0],
        "price": message_array[1],
         "pr_quantity": message_array[2],
-        "url": message_array[3]
+        "url": message_array[3],
+        "category": message_array[4]
     }
 
     response = requests.post("http://localhost:8000/products", json=product_data)

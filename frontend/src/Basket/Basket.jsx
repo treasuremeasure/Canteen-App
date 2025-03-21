@@ -49,38 +49,51 @@ export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecrease
                                 </div>
                         </div>
 
-                        {/* Карточка товара */}
-                        {Object.entries(selectedItems).map(([itemName, item]) => (
-                        <div key={itemName} className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 justify-between">
-                            <div className="flex items-center gap-4">
-                                <div
-                                    className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg w-14 h-14"
-                                    style={{
-                                        backgroundImage:  `url(${item.url})`,
-                                    }}
-                                ></div>
-                                <div className="flex flex-col justify-center">
-                                    <p className="text-[#1C160C] text-base font-medium leading-normal">
-                                        {itemName}
-                                    </p>
-                                    <p className="text-[#A18249] text-sm font-normal leading-normal">
-                                        {item.price} р.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="shrink-0">
-                                <div className="flex items-center gap-2 text-[#1C160C]">
-                                    <button onClick={() => onDecreaseAmount(itemName)} className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
-                                        -
-                                    </button>
-                                    <p>{item.quantity}</p>
-                                    <button onClick={() => onIncreaseAmount(itemName)} className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer">
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-                        </div>    
-                        ))}          
+                        {Object.entries(selectedItems).map(([id, item]) => (
+  <div key={id} className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 justify-between">
+    <div className="flex items-center gap-4">
+      <div
+        className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg w-14 h-14"
+        style={{
+          backgroundImage: `url(${item.url})`,
+        }}
+      ></div>
+
+      <div className="flex flex-col justify-center">
+        {/* ✅ Используем item.itemName */}
+        <p className="text-[#1C160C] text-base font-medium leading-normal">
+          {item.itemName}
+        </p>
+        <p className="text-[#A18249] text-sm font-normal leading-normal">
+          {item.price} р.
+        </p>
+      </div>
+    </div>
+
+    <div className="shrink-0">
+      <div className="flex items-center gap-2 text-[#1C160C]">
+        {/* Передаем id как аргумент */}
+        <button
+          onClick={() => onDecreaseAmount(parseInt(id))}
+          className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer"
+        >
+          -
+        </button>
+
+        <p>{item.quantity}</p>
+
+        <button
+          onClick={() => onIncreaseAmount(parseInt(id))}
+          className="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#F4EFE6] cursor-pointer"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  </div>
+))}
+   
+                                
                     </div>
 
                     {/* Нижняя часть - итоги и кнопка */}

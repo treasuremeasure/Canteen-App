@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ItemCard from "./ItemCard";
-import { useState, useEffect } from "react";
 
-
-export default function ListSalads({ selectedItems, handleChoose, handleIncreaseAmount, handleDecreaseAmount }) {
-  const [products, setProducts] = useState([]);
+export default function ListSalads({ selectedItems, setSelectedItems }) {
+  const [products, setProducts] = useState([]); // ✅ useState
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -23,20 +21,69 @@ export default function ListSalads({ selectedItems, handleChoose, handleIncrease
     fetchProducts();
   }, []);
 
+  const handleChoose = (id, itemName, price, url) => {
+    setSelectedItems((prev) => ({
+      ...prev,
+      [id]: { itemName, price, quantity: 1, url },
+    }));
+  };
+
+  const handleIncreaseAmount = (id) => {
+    setSelectedItems((prev) => {
+      const item = prev[id];
+      const product = products.find((p) => p.id === id);
+
+      if (!product) {
+        console.error(`Товар с id "${id}" не найден`);
+        return prev;
+      }
+
+      if (item.quantity >= product.pr_quantity) {
+        alert(`Извините, доступно только ${product.pr_quantity} штук`);
+        return prev;
+      }
+
+      return {
+        ...prev,
+        [id]: { ...item, quantity: item.quantity + 1 },
+      };
+    });
+  };
+
+  const handleDecreaseAmount = (id) => {
+    setSelectedItems((prev) => {
+      const item = prev[id];
+      if (!item) return prev;
+
+      if (item.quantity <= 1) {
+        const newState = { ...prev };
+        delete newState[id];
+        return newState;
+      }
+
+      return {
+        ...prev,
+        [id]: { ...item, quantity: item.quantity - 1 },
+      };
+    });
+  };
+
   return (
     <div className="grid grid-cols-2 gap-3">
-                      {products.map((product) => (
-                        <ItemCard
-                          key={product.id}
-                          itemName={product.itemname}
-                          price={product.price}
-                          imageUrl={product.url}
-                          selectedItems={selectedItems}
-                          handleChoose={handleChoose}
-                          handleIncreaseAmount={handleIncreaseAmount}
-                          handleDecreaseAmount={handleDecreaseAmount}
-                        />
-                      ))}
-      </div>
+      {products.map((product) => (
+        <ItemCard
+          key={product.id}
+          id={product.id}
+          itemName={product.itemname}
+          price={product.price}
+          imageUrl={product.url}
+          quantity={product.pr_quantity}
+          selectedItems={selectedItems}
+          handleChoose={handleChoose}
+          handleIncreaseAmount={handleIncreaseAmount}
+          handleDecreaseAmount={handleDecreaseAmount}
+        />
+      ))}
+    </div>
   );
 }

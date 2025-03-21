@@ -6,3 +6,4 @@ class ProductCreate(BaseModel):
     price: float
     pr_quantity: int
     url: Optional[str] = None  # Поле url может быть пустым
+    category: str
