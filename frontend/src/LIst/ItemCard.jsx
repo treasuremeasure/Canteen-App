@@ -6,6 +6,7 @@ export default function ItemCard({
     handleChoose,
     handleIncreaseAmount,
     handleDecreaseAmount,
+    quantity
   }) {
     return (
       <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-md h-full">

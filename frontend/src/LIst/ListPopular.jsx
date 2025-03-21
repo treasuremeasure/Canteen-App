@@ -41,10 +41,12 @@ export default function List() {
   function handleIncreaseAmount(itemName) {
     setSelectedItems((prev) => {
       const item = prev[itemName];
+      if (item.quantity < products.pr_quantity) {
       return {
         ...prev,
         [itemName]: { ...item, quantity: item.quantity + 1 },
-      };
+       };
+      }
     });
   }
 
@@ -80,6 +82,8 @@ export default function List() {
 
     fetchProducts();
   }, []);
+  
+  console.log(products)
 
   return (
     <>
@@ -171,6 +175,7 @@ export default function List() {
                           itemName={product.itemname}
                           price={product.price}
                           imageUrl={product.url}
+                          quantity = {product.pr_quantity}
                           selectedItems={selectedItems}
                           handleChoose={handleChoose}
                           handleIncreaseAmount={handleIncreaseAmount}
