@@ -33,6 +33,8 @@ app.add_middleware(
 
 
 # ручки БД
+
+#достаем блюда из категории "Популярное"
 @app.get("/products/")
 async def get_products(category: str = Query("Популярное")):
     # Здесь вы можете использовать category для фильтрации продуктов
@@ -40,6 +42,7 @@ async def get_products(category: str = Query("Популярное")):
     results = await database.fetch_all(query)  # Выполняем запрос
     return results  # Возвращаем результаты
 
+#достаем блюда из категории "Салаты"
 @app.get("/products/")
 async def get_products(category: str = Query("Салаты")):
     # Здесь вы можете использовать category для фильтрации продуктов
@@ -48,6 +51,7 @@ async def get_products(category: str = Query("Салаты")):
     return results  # Возвращаем результаты
 
 
+#кладем блюда в таблицу Products (админский бот)
 @app.post("/products",
           tags=["Работа с БД"],
           summary="Добавляем запись в таблицу products")
@@ -62,6 +66,7 @@ async def create_product(product: ProductCreate):
     await database.execute(query)
     return {"message": "Блюдо успешно добавлено", "Product": product}
 
+#поиск блюд в таблице Products
 @app.get("/search/")
 async def search_products(query: str):
     # Создаем запрос для поиска продуктов по названию, начинающемуся с введенной строки
