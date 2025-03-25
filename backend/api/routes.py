@@ -2,8 +2,8 @@ from fastapi import FastAPI, Query
 from contextlib import asynccontextmanager
 from sqlalchemy import select, insert
 from .database import database, engine  # твой импорт базы данных
-from .models import Product
-from .schemas import ProductCreate
+from .models import Product, Order
+from .schemas import ProductCreate, OrderCreate, OrderProduct
 from fastapi.middleware.cors import CORSMiddleware
 
 # подключение к БД
@@ -73,3 +73,21 @@ async def search_products(query: str):
     stmt = select(Product).where(Product.itemname.ilike(f"%{query}%"))  # Используем ilike для нечувствительного к регистру поиска
     results = await database.fetch_all(stmt)  # Выполняем запрос
     return results  # Возвращаем результаты
+
+@app.post("/orders", summary="Создание нового заказа")
+async def create_order(order: OrderCreate):
+    # Шаг 1: создаем запись в таблице orders
+    order_query = insert(Order).values(customer_name=order.customer_name)
+    order_id = await database.execute(order_query)
+
+    # Шаг 2: добавляем записи в таблицу orderproducts
+    order_product_queries = [
+        insert(OrderProduct).values(order_id=order_id, product_id=item.product_id, quantity=item.quantity)
+        for item in order.products
+    ]
+    for query in order_product_queries:
+        await database.execute(query)
+
+    return {"message": "Заказ успешно создан", "order_id": order_id}
+
+#uvicorn api.routes:app --reload

@@ -8,12 +8,14 @@ TOKEN = "7904611916:AAG0NlhSUHg1FYjRDAHP-DQ_I43nHPG42wg"
 bot = telebot.TeleBot(TOKEN)
 
 
+
 @bot.message_handler(commands=['start'])
 def start(message):
     global user_chat_id
     user_chat_id = message.chat.id  # Сохраняем ID чата из объекта message
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     button = types.KeyboardButton(text='Меню')
+    print(message.from_user.username)
     keyboard.add(button)
 
     bot.send_message(message.chat.id, "Привет! По кнопкам ниже ты можешь выбрать необходимую опцию", reply_markup=keyboard)
@@ -43,7 +45,7 @@ def add_product(message):
     else:
         bot.send_message(message.chat.id, "Ошибка при добавлении продукта: " + response.text)
 
-    print(message_array)
+    
 
 
 bot.polling()
