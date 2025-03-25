@@ -113,7 +113,7 @@ export default function List() {
       ) : (
         <>
           {showSearch ? (
-            <SearchInterface />
+            <SearchInterface products={products} setProducts={setProducts} selectedItems={selectedItems} handleChoose={handleChoose} handleIncreaseAmount={handleIncreaseAmount} handleDecreaseAmount={handleDecreaseAmount}/>
           ) : (
             <QuantityContext.Provider
               value={Object.values(selectedItems).reduce(

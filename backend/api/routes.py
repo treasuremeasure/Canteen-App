@@ -61,3 +61,10 @@ async def create_product(product: ProductCreate):
     )
     await database.execute(query)
     return {"message": "Блюдо успешно добавлено", "Product": product}
+
+@app.get("/search/")
+async def search_products(query: str):
+    # Создаем запрос для поиска продуктов по названию, начинающемуся с введенной строки
+    stmt = select(Product).where(Product.itemname.ilike(f"%{query}%"))  # Используем ilike для нечувствительного к регистру поиска
+    results = await database.fetch_all(stmt)  # Выполняем запрос
+    return results  # Возвращаем результаты

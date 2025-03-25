@@ -1,14 +1,39 @@
-import React, { createContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import ItemCard from '../LIst/ItemCard';
 
 
-function SearchInterface() {
+function SearchInterface({products, setProducts, selectedItems, handleChoose, handleIncreaseAmount, handleDecreaseAmount }) {
 
   {/* Поиск */}
-  const [searchQuery, setSearchQuery] = useState([])
+  const [searchQuery, setSearchQuery] = useState("")
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value)
   }
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      // если строка пустая — не делаем запрос и очищаем список
+      setProducts([]);
+      return;
+    }
+  
+    const searchByLetter = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/search/?query=${encodeURIComponent(searchQuery)}`);
+        if (!response.ok) {
+          throw new Error("Ошибка при получении данных");
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Ошибка:", error);
+      }
+    };
+  
+    searchByLetter();
+  }, [searchQuery]);
+
 
     return(
       <>
@@ -33,10 +58,22 @@ function SearchInterface() {
           </div>
         </label>
         </div>
-
-        
-
-
+        <div className="grid grid-cols-2 gap-3">
+                      {products.map((product) => (
+                        <ItemCard
+                          key={product.id}
+                          id={product.id}
+                          itemName={product.itemname}
+                          price={product.price}
+                          imageUrl={product.url}
+                          quantity = {product.pr_quantity}
+                          selectedItems={selectedItems}
+                          handleChoose={handleChoose}
+                          handleIncreaseAmount={handleIncreaseAmount}
+                          handleDecreaseAmount={handleDecreaseAmount}
+                        />
+                      ))}
+                    </div>
       
       </>
       );
