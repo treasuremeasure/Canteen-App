@@ -74,6 +74,11 @@ async def search_products(query: str):
     results = await database.fetch_all(stmt)  # Выполняем запрос
     return results  # Возвращаем результаты
 
+
+@app.get("/username", summary="Получение username пользователя")
+async def get_username(username: str = Query(...)):
+    return username
+
 @app.post("/orders", summary="Создание нового заказа")
 async def create_order(order: OrderCreate):
     # Шаг 1: создаем запись в таблице orders

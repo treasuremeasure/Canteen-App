@@ -83,7 +83,7 @@ export default function List() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/products/?category=Популярное");
+        const response = await fetch("https://m58tk9m18x.loclx.io/products/?category=Популярное");
         if (!response.ok) {
           throw new Error("Ошибка при получении данных");
         }

@@ -7,7 +7,7 @@ export default function ListSalads({ selectedItems, setSelectedItems }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/products/?category=Салаты");
+        const response = await fetch("https://m58tk9m18x.loclx.io/products/?category=Салаты");
         if (!response.ok) {
           throw new Error("Ошибка при получении данных");
         }

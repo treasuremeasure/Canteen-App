@@ -3,6 +3,7 @@ import { QuantityContext } from "../LIst/ListPopular";
 
 export default function Footer({ naming, onShowBasket, hideQuantity, setSelectedItems, resetState, selectedItems }) {
   const quantity = useContext(QuantityContext);
+  const [username, handleUserName] = useState('')
 
   async function order() {
     try {
@@ -24,6 +25,21 @@ export default function Footer({ naming, onShowBasket, hideQuantity, setSelected
     }
   }
 
+  async function get_username() {
+    
+      try {
+        const response = await fetch("http://localhost:8000/username");
+        if (!response.ok) {
+          throw new Error("Ошибка при получении данных");
+        }
+        handleUserName(username)
+        console.log(username)
+      } catch (error) {
+        console.error("Ошибка:", error);
+      }
+    
+  }
+
   return (
     <>
       <div className="fixed bottom-0 left-2.5 w-full bg-white p-2">
@@ -38,7 +54,7 @@ export default function Footer({ naming, onShowBasket, hideQuantity, setSelected
           </button>
         ) : (
           <button
-            onClick={hideQuantity ? order : onShowBasket}
+            onClick={hideQuantity ? get_username : onShowBasket}
             className="flex left-4 w-11/12 cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-[#ee7f2b] text-[#181411] text-base font-bold leading-normal tracking-[0.015em]"
           >
             {hideQuantity ? (
