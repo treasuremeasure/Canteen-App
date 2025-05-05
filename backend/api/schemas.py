@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, List
+from typing import Dict
 
 class ProductCreate(BaseModel):
     itemName: str
@@ -13,5 +14,4 @@ class OrderProduct(BaseModel):
     quantity: int
 
 class OrderCreate(BaseModel):
-    customer_name: str
-    products: List[OrderProduct]
+    items: Dict[str, ProductCreate]

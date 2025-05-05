@@ -7,7 +7,7 @@ export default function ListSalads({ selectedItems, setSelectedItems }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("https://m58tk9m18x.loclx.io/products/?category=Салаты");
+        const response = await fetch("http://localhost:8000/products?category=Салаты");
         if (!response.ok) {
           throw new Error("Ошибка при получении данных");
         }
@@ -21,10 +21,10 @@ export default function ListSalads({ selectedItems, setSelectedItems }) {
     fetchProducts();
   }, []);
 
-  const handleChoose = (id, itemName, price, url) => {
+  const handleChoose = (id, itemName, price, url, category) => {
     setSelectedItems((prev) => ({
       ...prev,
-      [id]: { itemName, price, quantity: 1, url },
+      [id]: { itemName, price, pr_quantity: 1, url, category: "Салаты" },
     }));
   };
 
@@ -38,14 +38,14 @@ export default function ListSalads({ selectedItems, setSelectedItems }) {
         return prev;
       }
 
-      if (item.quantity >= product.pr_quantity) {
+      if (item.pr_quantity >= product.pr_quantity) {
         alert(`Извините, доступно только ${product.pr_quantity} штук`);
         return prev;
       }
 
       return {
         ...prev,
-        [id]: { ...item, quantity: item.quantity + 1 },
+        [id]: { ...item, quantity: item.pr_quantity + 1 },
       };
     });
   };
@@ -55,7 +55,7 @@ export default function ListSalads({ selectedItems, setSelectedItems }) {
       const item = prev[id];
       if (!item) return prev;
 
-      if (item.quantity <= 1) {
+      if (item.pr_quantity <= 1) {
         const newState = { ...prev };
         delete newState[id];
         return newState;
@@ -63,7 +63,7 @@ export default function ListSalads({ selectedItems, setSelectedItems }) {
 
       return {
         ...prev,
-        [id]: { ...item, quantity: item.quantity - 1 },
+        [id]: { ...item, quantity: item.pr_quantity - 1 },
       };
     });
   };

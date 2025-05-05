@@ -4,8 +4,6 @@ import List from "../LIst/ListPopular";
 
 export default function Basket({onReturnFromBasket, onIncreaseAmount, onDecreaseAmount, setSelectedItems, selectedItems, resetState} ) {
     
-
-   
     
     return (
         <>

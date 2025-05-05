@@ -8,6 +8,6 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true, // чтобы был доступен извне
-    allowedHosts: ['hchuskr5cl.loclx.io'],
+    allowedHosts: ['glawataj36.loclx.io'],
   },
 })

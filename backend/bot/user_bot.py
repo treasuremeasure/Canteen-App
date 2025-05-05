@@ -14,7 +14,7 @@ def start(message):
     global user_chat_id
     user_chat_id = message.chat.id  # Сохраняем ID чата из объекта message
     markup = InlineKeyboardMarkup()
-    menu_button = InlineKeyboardButton("Меню", web_app=WebAppInfo(url='https://h6gw89loqe.loclx.io/'))
+    menu_button = InlineKeyboardButton("Меню", web_app=WebAppInfo(url='https://glawataj36.loclx.io/'))
     markup.add(menu_button)
 
 

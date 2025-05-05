@@ -9,7 +9,7 @@ export default function ItemCard({
   handleDecreaseAmount,
   quantity
 }) {
-  const currentQuantity = selectedItems[id]?.quantity || 0;
+  const currentQuantity = selectedItems[id]?.pr_quantity || 0;
 
   return (
     <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-md h-full">

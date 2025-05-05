@@ -31,10 +31,10 @@ export default function List() {
   const handleShowListSalads = () => setShowListSalads(true);
   const handleShowPopular = () => setShowListSalads(false);
 
-  function handleChoose(id, itemName, price, url) {
+  function handleChoose(id, itemName, price, url, category) {
     setSelectedItems((prev) => ({
       ...prev,
-      [id]: { itemName, price, quantity: 1, url }, // ✅ используем id как ключ
+      [id]: { itemName, price, pr_quantity: 1, url, category: "Популярное" }, // ✅ используем id как ключ
     }));
   }
    
@@ -49,14 +49,14 @@ export default function List() {
         return prev;
       }
   
-      if (item.quantity >= product.pr_quantity) {
+      if (item.pr_quantity >= product.pr_quantity) {
         alert(`Извините, доступно только ${product.pr_quantity} штук`);
         return prev;
       }
   
       return {
         ...prev,
-        [id]: { ...item, quantity: item.quantity + 1 },
+        [id]: { ...item, quantity: item.pr_quantity + 1 },
       };
     });
   }
@@ -73,7 +73,7 @@ export default function List() {
       } else {
         return {
           ...prev,
-          [id]: { ...item, quantity: item.quantity - 1 },
+          [id]: { ...item, quantity: item.pr_quantity - 1 },
         };
       }
     });
@@ -83,7 +83,7 @@ export default function List() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("https://m58tk9m18x.loclx.io/products/?category=Популярное");
+        const response = await fetch("http://localhost:8000/products?category=Популярное")
         if (!response.ok) {
           throw new Error("Ошибка при получении данных");
         }
@@ -96,8 +96,9 @@ export default function List() {
 
     fetchProducts();
   }, []);
-  
-  console.log(products)
+
+
+
 
   return (
     <>
@@ -117,7 +118,7 @@ export default function List() {
           ) : (
             <QuantityContext.Provider
               value={Object.values(selectedItems).reduce(
-                (total, item) => total + item.quantity,
+                (total, item) => total + item.pr_quantity,
                 0
               )}
             >

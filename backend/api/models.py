@@ -20,7 +20,6 @@ class Order(Base):
     __tablename__ = "orders"
 
     id = Column(Integer, primary_key=True, index=True)
-    customer_name = Column(String(255), nullable=False)
     order_date = Column(DateTime, nullable=False)
 
     def __repr__(self):
@@ -34,5 +33,5 @@ class OrderProduct(Base):
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)  # Связь с таблицей products
     quantity = Column(Integer, nullable=False)
 
-    def __repr__(self):
-        return f"<OrderProduct(id={self.id}, order_id={self.order_id}, product_id={self.product_id}, quantity={self.quantity})>"
+def __repr__(self):
+    return f"<Product(id={self.id}, itemname={self.itemname}, price={self.price}, pr_quantity={self.pr_quantity}, url={self.url})>"

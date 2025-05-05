@@ -1,9 +1,9 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException
 from contextlib import asynccontextmanager
 from sqlalchemy import select, insert
 from .database import database, engine  # твой импорт базы данных
-from .models import Product, Order
-from .schemas import ProductCreate, OrderCreate, OrderProduct
+from .models import Order, OrderProduct, Product
+from .schemas import ProductCreate, OrderCreate
 from fastapi.middleware.cors import CORSMiddleware
 
 # подключение к БД
@@ -35,7 +35,7 @@ app.add_middleware(
 # ручки БД
 
 #достаем блюда из категории "Популярное"
-@app.get("/products/")
+@app.get("/products")
 async def get_products(category: str = Query("Популярное")):
     # Здесь вы можете использовать category для фильтрации продуктов
     query = select(Product).where(Product.category == category)  # Предполагается, что у вас есть поле category в модели Product
@@ -43,7 +43,7 @@ async def get_products(category: str = Query("Популярное")):
     return results  # Возвращаем результаты
 
 #достаем блюда из категории "Салаты"
-@app.get("/products/")
+@app.get("/products")
 async def get_products(category: str = Query("Салаты")):
     # Здесь вы можете использовать category для фильтрации продуктов
     query = select(Product).where(Product.category == category)  # Предполагается, что у вас есть поле category в модели Product
@@ -75,23 +75,30 @@ async def search_products(query: str):
     return results  # Возвращаем результаты
 
 
-@app.get("/username", summary="Получение username пользователя")
-async def get_username(username: str = Query(...)):
-    return username
-
 @app.post("/orders", summary="Создание нового заказа")
 async def create_order(order: OrderCreate):
-    # Шаг 1: создаем запись в таблице orders
-    order_query = insert(Order).values(customer_name=order.customer_name)
-    order_id = await database.execute(order_query)
+    # Шаг 1: создаём заказ (пустой, без имени)
+    order_id = await database.execute(insert(Order).values())
 
-    # Шаг 2: добавляем записи в таблицу orderproducts
-    order_product_queries = [
-        insert(OrderProduct).values(order_id=order_id, product_id=item.product_id, quantity=item.quantity)
-        for item in order.products
-    ]
-    for query in order_product_queries:
-        await database.execute(query)
+    # Шаг 2: обрабатываем словарь items
+    for key, item in order.items.items():
+        # Поиск product_id по itemName
+        query = select(Product).where(Product.itemname == item.itemName)
+        product = await database.fetch_one(query)
+
+        if not product:
+            raise HTTPException(status_code=404, detail=f"Продукт '{item.itemName}' не найден")
+
+        product_id = product.id
+
+        # Шаг 3: вставка в OrderProduct
+        await database.execute(
+            insert(OrderProduct).values(
+                order_id=order_id,
+                product_id=product_id,
+                quantity=item.pr_quantity
+            )
+        )
 
     return {"message": "Заказ успешно создан", "order_id": order_id}
 
