@@ -1,4 +1,4 @@
-Пет проект
+Пет-проект
 
 Стек: FastAPI, React, Telegram Mini App
 
